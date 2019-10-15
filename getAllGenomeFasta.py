@@ -17,8 +17,9 @@ logger.addHandler(ch)
 
 class GenomeFastaURLs(object):
 
-    def __init__(self, args):
+    def __init__(self, args, project):
         self.args = args
+        self.project = project
         self.baseurl = self.getBaseURL()
         self.fields = ["URLGenomeFasta"] if self.args.type == 'genomic' else ["URLproteinFasta"]
         self.question = "GenomeDataTypes" if self.args.includeUnannotated else "GeneMetrics"
@@ -50,7 +51,7 @@ class GenomeFastaURLs(object):
         return s
 
     def getBaseURL(self):
-        baseUrl = "https://{0}.org".format(self.args.project)
+        baseUrl = "https://{0}.org".format(self.project)
         return baseUrl
 
     def retrieveGenomeFastaFiles(self):
@@ -74,7 +75,7 @@ class ArgParser(ArgumentParser):
 
     def __init__ (self):
         super().__init__()
-        self.add_argument('project', help='EuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB, TriTrypDB')
+        self.add_argument('project', help='EuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g, CryptoDB,ToxoDB')
         self.add_argument('--type', choices=['genomic', 'transcript', 'cds', 'protein'], required=True, help='Type of sequence to download. Choose from genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid)')
         self.add_argument('--includeUnannotated', action='store_true', help='For genomic sequences only, include fasta from organisms with no annotations')
 
@@ -103,5 +104,6 @@ class IncompatibleArgsError(Exception):
 
 if __name__ == '__main__':
     args = ArgParser().parse_args()
-    genomeFastaURLs = GenomeFastaURLs(args)
-    genomeFastaURLs.retrieveGenomeFastaFiles()
+    for project in args.project.split(','):
+        genomeFastaURLs = GenomeFastaURLs(args, project)
+        genomeFastaURLs.retrieveGenomeFastaFiles()
