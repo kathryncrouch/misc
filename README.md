@@ -13,7 +13,9 @@ usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein}
 
 positional arguments:
   project               EuPathDB project from which you wish to download fasta
-                        sequences, e.g., PlasmoDB, TriTrypDB
+                        sequences, e.g., PlasmoDB. For downloads from multiple
+                        projects, use a comma separated list, e.g,
+                        CryptoDB,ToxoDB
 
 optional arguments:
   -h, --help            show this help message and exit
