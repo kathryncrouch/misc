@@ -12,7 +12,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Generates a wiggle file from two bed files with the ratio of coverage')
     parser.add_argument('--file1', required=True, help='the first bed file (the ratio is first/second)')
     parser.add_argument('--file2', required=True, help='the second bed file (the ratio is first/second)')
-    parser.add_argument('--noNormalise', action='store_true', help="Normalise files for read depth")
+    parser.add_argument('--noNormalise', action='store_true', help="do not normalise files for read depth")
     parser.add_argument('--out', required=False, help='output wiggle file name, defaults to STDOUT')
     parser.add_argument('--format', default='bed', required=False, choices=['bed', 'wig'], help="output format")
     return parser.parse_args()
