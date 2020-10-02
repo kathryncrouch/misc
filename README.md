@@ -26,3 +26,19 @@ optional arguments:
   --includeUnannotated  For genomic sequences only, include fasta from
                         organisms with no annotations
 ```
+
+*mfaseq_bed.py*
+Calculates ratios between two bed files with equal sized windows.  Intended for MFAseq, but could be used for other applications. Output can be written in bed or wig format. By default, the two files are normalised to each other using the sum of all the window values. This behaviour can be turned off using the noNormalise flag.
+
+*Script is written in Python2. Mea culpa.  Feel free to message me for a Python3 upgrade, or I will happily take pull requests!*
+
+```Generates a wiggle file from two bed files with the ratio of coverage
+
+optional arguments:
+  -h, --help          show this help message and exit
+  --file1 FILE1       the first bed file (the ratio is first/second)
+  --file2 FILE2       the second bed file (the ratio is first/second)
+  --noNormalise       Normalise files for read depth
+  --out OUT           output wiggle file name, defaults to STDOUT
+  --format {bed,wig}  output format
+  ```
