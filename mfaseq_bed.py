@@ -9,12 +9,12 @@ import itertools
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Generates a wiggle file from two bed files with the ratio of coverage')
+    parser = argparse.ArgumentParser(description='Generates a bed or wig file from two bed files with the ratio of coverage', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--file1', required=True, help='the first bed file (the ratio is first/second)')
     parser.add_argument('--file2', required=True, help='the second bed file (the ratio is first/second)')
-    parser.add_argument('--noNormalise', action='store_true', help="do not normalise files for read depth")
-    parser.add_argument('--out', required=False, help='output wiggle file name, defaults to STDOUT')
-    parser.add_argument('--format', default='bed', required=False, choices=['bed', 'wig'], help="output format")
+    parser.add_argument('--noNormalise', action='store_false', help="do not normalise files for read depth")
+    parser.add_argument('--out', required=False, help='output file name, defaults to STDOUT')
+    parser.add_argument('--format', default='bed', required=False, choices=['bed', 'wig'], help="output format [bed]")
     return parser.parse_args()
 
 def fileWriter (line, fileHandle):
@@ -65,7 +65,7 @@ def main():
         raise SystemExit ("ERROR: There is a mismatch between file1 and file2 at line {line}\nFile1:{chrom1}\t{start1}\t{end1}\nFile2:{chrom2}\t{start2}\t{end2}\n".format(line=lineNo,chrom1=chromE,start1=startE,end1=endE,chrom2=chromG,start2=startG,end2=endE))
 
     try:
-        gConversionFactor = 1 if args.noNormalise else sumE/sumG
+        gConversionFactor = 1 if not args.noNormalise else sumE/sumG
     except ZeroDivisionError as detail:
         raise SystemExit('ERROR: there is a problem calculating gConversion factor:%s\n' % detail)
 
