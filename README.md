@@ -28,7 +28,7 @@ optional arguments:
 ```
 
 *mfaseq_bed.py*
-Calculates ratios between two bed files with equal sized windows.  Intended for MFAseq, but could be used for other applications. Output can be written in bed or wig format. By default, the two files are normalised to each other using the sum of all the window values. This behaviour can be turned off using the noNormalise flag.
+Calculates ratios between two bed files with equal sized windows.  Intended for MFAseq, but could be used for other applications. Output can be written in bed or wig format. By default, the two files are normalised to each other using the sum of the values for all the windows. This behaviour can be turned off using the noNormalise flag.
 
 *Script is written in Python2. Mea culpa.  Feel free to message me for a Python3 upgrade, or I will happily take pull requests!*
 
