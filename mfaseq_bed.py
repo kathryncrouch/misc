@@ -10,7 +10,6 @@ import itertools
 
 def get_args():
     parser = argparse.ArgumentParser(description='Generates a wiggle file from two bed files with the ratio of coverage')
-    parser.add_argument('--window', required=True, help='the window size in bases (tile) used in the input bed files')
     parser.add_argument('--file1', required=True, help='the first bed file (the ratio is first/second)')
     parser.add_argument('--file2', required=True, help='the second bed file (the ratio is first/second)')
     parser.add_argument('--noNormalise', action='store_true', help="Normalise files for read depth")
@@ -33,7 +32,6 @@ def main():
 
     fileE = args.file1
     fileG = args.file2
-    windowSize = int(args.window)
 
     fileHandle = sys.stdout
 
@@ -73,6 +71,9 @@ def main():
 
     for chromosome, chrData in data.items():
         if args.format == 'wig':
+            firstEntry = chrData.keys()[0]
+            windowSize = int(chrData[firstEntry]['end']) - int(chrData[firstEntry]['start'])
+            print(windowSize)
             headerLine = "fixedStep  chrom={0}  start=1  step={1}  span={2}".format(chromosome, windowSize, windowSize-1)
             fileWriter(headerLine, fileHandle)
         for window, windowData in sorted(chrData.items()):
