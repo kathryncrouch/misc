@@ -42,7 +42,7 @@ optional arguments:
   -h, --help          show this help message and exit
   --file1 FILE1       the first bed file (the ratio is first/second)
   --file2 FILE2       the second bed file (the ratio is first/second)
-  --noNormalise       Normalise files for read depth
+  --noNormalise       do not normalise files for read depth
   --out OUT           output wiggle file name, defaults to STDOUT
   --format {bed,wig}  output format
   
