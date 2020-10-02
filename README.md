@@ -32,7 +32,11 @@ Calculates ratios between two bed files with equal sized windows.  Intended for 
 
 *Script is written in Python2. Mea culpa.  Feel free to message me for a Python3 upgrade, or I will happily take pull requests!*
 
-```Generates a wiggle file from two bed files with the ratio of coverage
+```
+usage: mfaseq_bed.py [-h] --file1 FILE1 --file2 FILE2 [--noNormalise]
+                     [--out OUT] [--format {bed,wig}]
+
+Generates a wiggle file from two bed files with the ratio of coverage
 
 optional arguments:
   -h, --help          show this help message and exit
@@ -41,4 +45,5 @@ optional arguments:
   --noNormalise       Normalise files for read depth
   --out OUT           output wiggle file name, defaults to STDOUT
   --format {bed,wig}  output format
+  
   ```
