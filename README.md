@@ -1,7 +1,7 @@
 # Miscellaneous Scripts
 Miscellaneous scripts not associated with any particular project
 
-*getAllGenomeFasta.py*
+## getAllGenomeFasta.py
 Retrieves genome-level fasta files from Downloads for every organism in a EuPathDB project (e.g., PlasmoDB). Choose between genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid).  For genomic sequence, you can choose to include organisms without annotations.
 
 *Script is written in Python3 and requires the requests library.  See requests documentation for installation instructions [here](https://2.python-requests.org "Requests Documentation") (or use pip)*
@@ -27,7 +27,7 @@ optional arguments:
                         organisms with no annotations
 ```
 
-*mfaseq_bed.py*
+## mfaseq_bed.py
 Calculates ratios between two bed files with equal sized windows.  Intended for MFAseq, but could be used for other applications. Output can be written in bed or wig format. By default, the two files are normalised to each other using the sum of the values for all the windows. This behaviour can be turned off using the noNormalise flag.
 
 *Script is written in Python2. Mea culpa.  Feel free to message me for a Python3 upgrade, or I will happily take pull requests!*
