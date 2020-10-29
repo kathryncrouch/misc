@@ -24,7 +24,7 @@ class GenomeFastaURLs(object):
         self.fields = ["URLGenomeFasta"] if self.args.type == 'genomic' else ["URLproteinFasta"]
         self.question = "GenomeDataTypes" if self.args.includeUnannotated else "GeneMetrics"
         
-        url = ('{0}/webservices/OrganismQuestions/{2}.json?o-fields={1}').format(self.baseurl, ','.join(self.fields), self.question)
+        url = ('{0}/a/service/record-types/organism/searches/{1}/reports/standard?reportConfig={{\"attributes\":[\"{2}\"]}}'.format(self.baseurl, self.question, ','.join(self.fields)))
         s = self.get_session()
         res = s.get(url, verify=True)
         self.orgs = collections.deque()
@@ -36,10 +36,12 @@ class GenomeFastaURLs(object):
             except requests.exceptions.HTTPError as e:
                 logger.error("Cannot retrieve file from url: {0}. Please check the URL is correct. In case of an outage at EuPathDB, please try again later.\n\n{1}".format(url, e))
                 raise SystemExit()
-        for v in j['response']['recordset']['records']:
-            for f in v['fields']:
-                item = f['value']
-            self.orgs.append(item)
+        
+        for record in j['records']:
+            for attribute in record['attributes']:
+                if attribute in self.fields:
+                    self.orgs.append(record['attributes'][attribute])
+
 
     def get_session(self):
         try:
