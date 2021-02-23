@@ -167,7 +167,7 @@ class Session(object):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('--project', required=True, help='VEuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g, CryptoDB,ToxoDB')
+    parser.add_argument('--project', required=True, help='VEuPathDB project from which you wish to download RNA sequence data, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g, CryptoDB,ToxoDB')
     parser.add_argument('--outputDir', required=True, help='Directory for output files')
     args = parser.parse_args()
     for project in args.project.split(','):
