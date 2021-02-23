@@ -62,11 +62,12 @@ usage: rnaSeqDump.py [-h] --project PROJECT --outputDir OUTPUTDIR
 
 optional arguments:
   -h, --help            show this help message and exit
-  --project PROJECT     VEuPathDB project from which you wish to download
-                        fasta sequences, e.g., PlasmoDB. For downloads from
+  --project PROJECT     VEuPathDB project from which you wish to download RNA
+                        sequence data, e.g., PlasmoDB. For downloads from
                         multiple projects, use a comma separated list, e.g,
                         CryptoDB,ToxoDB
   --outputDir OUTPUTDIR
                         Directory for output files
+
 
 ```
