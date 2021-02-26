@@ -57,7 +57,7 @@ class RnaSeqParams(object):
                 # Needs to be done in web services
                 if re.match(r'^Transcript', key['help']):
                     dataset = re.search('\[.*?\]', key['help']).group(0)
-                    dataset = dataset.split(':')[1].replace(']','')
+                    dataset = dataset.split(':')[1].replace(']','').lstrip()
                     datasetNodes[dataset].append(key['name'])
         return datasetNodes
 
@@ -98,7 +98,7 @@ class RnaSeqDumper(object):
 
     def _writeData(self, experiment, payLoad):
         data = self._getData(payLoad, experiment)
-        fileName = experiment.lstrip().replace(' ', '_')
+        fileName = experiment.replace(' ', '_').replace('/', '-')
         fileName = '{0}/{1}.txt'.format(self.outputDir, fileName)
         logging.info('Writing data from experiment \"{0}\" to file {1}'.format(experiment, fileName))
         try:
