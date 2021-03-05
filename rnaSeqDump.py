@@ -4,11 +4,10 @@
 from collections import defaultdict
 import requests
 from argparse import ArgumentParser
-import urllib
-from urllib.parse import urlparse
 import logging
 import re
 import json
+from time import sleep
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -38,6 +37,7 @@ class RnaSeqParams(object):
         logging.info("Retrieving organism list")
         url = ('{0}/a/service/record-types/transcript/searches/GenesByTaxon'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
+        sleep(0.5)
         j = self.Session.getDataResponse(res, url)
         organismArray = []
         for parameter in j['searchData']['parameters']:
@@ -49,6 +49,7 @@ class RnaSeqParams(object):
         logging.info("Retrieving experiments and nodes")
         url = ('{0}/a/service/record-types/transcript'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
+        sleep(0.5)
         j = self.Session.getDataResponse(res, url)
         datasetNodes = defaultdict(list)
         for key in j['attributes']:
@@ -100,7 +101,7 @@ class RnaSeqDumper(object):
         data = self._getData(payLoad, experiment)
         fileName = experiment.replace(' ', '_').replace('/', '-')
         fileName = '{0}/{1}.txt'.format(self.outputDir, fileName)
-        logging.info('Writing data from experiment \"{0}\" to file {1}'.format(experiment, fileName))
+        logging.info('Writing data from experiment \"{0}\" to file {1}\n\n'.format(experiment, fileName))
         try:
             outFile = open(fileName, 'w')
             print (fileName)
