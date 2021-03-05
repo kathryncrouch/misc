@@ -34,7 +34,7 @@ class RnaSeqParams(object):
 
 
     def getOrganismList(self):
-        logging.info("Retrieving organism list")
+        logger.info("Retrieving organism list")
         url = ('{0}/a/service/record-types/transcript/searches/GenesByTaxon'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
         sleep(0.5)
@@ -46,7 +46,7 @@ class RnaSeqParams(object):
         return organismArray
 
     def getExperimentNodes(self):
-        logging.info("Retrieving experiments and nodes")
+        logger.info("Retrieving experiments and nodes")
         url = ('{0}/a/service/record-types/transcript'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
         sleep(0.5)
@@ -88,11 +88,21 @@ class RnaSeqDumper(object):
 
 
     def _getData(self, jsonPayLoad, experiment):
+        logger.info("Starting next experiment:")
         logger.info('Attempting to retrieve RNAseq data for experiment \"{0}\"'.format(experiment))
         url = ('{0}/a/service/record-types/transcript/searches/GenesByTaxon/reports/attributesTabular'.format(self.Session.baseUrl))
         logger.info("Sending a POST request to {0}".format(url))
         logger.info("JSON payload:\t{0}".format(jsonPayLoad))
-        res = self.Session.session.post(url, jsonPayLoad, headers={'Content-Type': 'application/json'}, stream=True)
+        req = requests.Request ('POST', url, data=jsonPayLoad, headers={'Content-Type': 'application/json'})
+        req = req.prepare()
+        logger.info('Full request:\n{}\n{}\n{}\n{}'.format(
+            '-----------START-----------',
+            req.method + ' ' + req.url,
+            '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+            req.body,
+            ))
+        #res = self.Session.session.post(url, jsonPayLoad, headers={'Content-Type': 'application/json'}, stream=True)
+        res = self.Session.session.send(req, stream=True)
         data = self.Session.getDataResponse(res, url, dataType="text")
         return data
 
@@ -101,10 +111,9 @@ class RnaSeqDumper(object):
         data = self._getData(payLoad, experiment)
         fileName = experiment.replace(' ', '_').replace('/', '-')
         fileName = '{0}/{1}.txt'.format(self.outputDir, fileName)
-        logging.info('Writing data from experiment \"{0}\" to file {1}\n\n'.format(experiment, fileName))
+        logger.info('Writing data from experiment \"{0}\" to file {1}\n\n'.format(experiment, fileName))
         try:
             outFile = open(fileName, 'w')
-            print (fileName)
             for line in data.iter_lines():
                 line = line.decode('utf-8').rstrip()
                 data = line.split('\t')
@@ -116,7 +125,7 @@ class RnaSeqDumper(object):
                 else:
                     outFile.write(line + '\n')
         except FileNotFoundError as e:
-            logging.error('Cannot open file {0} for writing\n\n{1}'.format(fileName, e))
+            logger.error('Cannot open file {0} for writing\n\n{1}'.format(fileName, e))
             raise SystemExit()
         outFile.close()
             
@@ -135,14 +144,14 @@ class Session(object):
         return baseUrl
 
     def _getSession(self, project):
-        logging.info("Attempting to connect to {0}".format(self.baseUrl))
+        logger.info("Attempting to connect to {0}".format(self.baseUrl))
         try:
             s = requests.session()
             s.get(self.baseUrl)
         except requests.exceptions.ConnectionError as e:
-            logging.error("Cannot connect to {0}. Please check the project name '{1}' is correct and try again.\n\n{2}".format(self.baserUrl, project, e))
+            logger.error("Cannot connect to {0}. Please check the project name '{1}' is correct and try again.\n\n{2}".format(self.baserUrl, project, e))
             raise SystemExit()
-        logging.info("Connection succeeded")
+        logger.info("Connection succeeded")
         return s
 
     def getDataResponse(self, res, url, dataType='json'):
