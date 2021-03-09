@@ -35,7 +35,7 @@ class RnaSeqParams(object):
 
     def getOrganismList(self):
         logger.info("Retrieving organism list")
-        url = ('{0}/a/service/record-types/transcript/searches/GenesByTaxon'.format(self.Session.baseUrl))
+        url = ('{0}/service/record-types/transcript/searches/GenesByTaxon'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
         sleep(0.5)
         j = self.Session.getDataResponse(res, url)
@@ -47,7 +47,7 @@ class RnaSeqParams(object):
 
     def getExperimentNodes(self):
         logger.info("Retrieving experiments and nodes")
-        url = ('{0}/a/service/record-types/transcript'.format(self.Session.baseUrl))
+        url = ('{0}/service/record-types/transcript'.format(self.Session.baseUrl))
         res = self.Session.session.get(url, verify=True)
         sleep(0.5)
         j = self.Session.getDataResponse(res, url)
@@ -90,7 +90,7 @@ class RnaSeqDumper(object):
     def _getData(self, jsonPayLoad, experiment):
         logger.info("Starting next experiment:")
         logger.info('Attempting to retrieve RNAseq data for experiment \"{0}\"'.format(experiment))
-        url = ('{0}/a/service/record-types/transcript/searches/GenesByTaxon/reports/attributesTabular'.format(self.Session.baseUrl))
+        url = ('{0}/service/record-types/transcript/searches/GenesByTaxon/reports/attributesTabular'.format(self.Session.baseUrl))
         logger.info("Sending a POST request to {0}".format(url))
         logger.info("JSON payload:\t{0}".format(jsonPayLoad))
         req = requests.Request ('POST', url, data=jsonPayLoad, headers={'Content-Type': 'application/json'})
@@ -135,12 +135,16 @@ class RnaSeqDumper(object):
 class Session(object):
 
     def __init__(self, project):
+        self.webAppMapper = {'amoebadb': 'amoeba', 'cryptodb': 'cryptodb', 'fungidb': 'fungidb', 'giardiadb': 'giardiadb', \
+                              'hostdb': 'hostdb', 'microsporidiadb': 'micro', 'piroplasmadb': 'piro', 'plasmodb': 'plasmo', \
+                              'toxodb': 'toxo', 'tritrypdb': 'tritrypdb', 'trichdb': 'trichdb', 'vectorbase': 'vectorbase'}
         self.baseUrl = self._getBaseUrl(project)
         self.session = self._getSession(project)
 
 
     def _getBaseUrl(self, project):
-        baseUrl = "https://{0}.org".format(project)
+        webApp = self._getWebApp(project)
+        baseUrl = "https://{0}.org/{1}".format(project, webApp)
         return baseUrl
 
     def _getSession(self, project):
@@ -153,6 +157,14 @@ class Session(object):
             raise SystemExit()
         logger.info("Connection succeeded")
         return s
+
+    def _getWebApp (self, project):
+        if project.lower() in self.webAppMapper:
+            return self.webAppMapper[project.lower()]
+        else:
+            logger.error("Cannot find webapp for {0}. Please check that {0} is a valid VEuPathDB project\n".format(project))
+            raise SystemExit()
+
 
     def getDataResponse(self, res, url, dataType='json'):
         if (res.ok):
