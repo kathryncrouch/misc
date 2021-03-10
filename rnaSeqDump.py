@@ -93,16 +93,7 @@ class RnaSeqDumper(object):
         url = ('{0}/service/record-types/transcript/searches/GenesByTaxon/reports/attributesTabular'.format(self.Session.baseUrl))
         logger.info("Sending a POST request to {0}".format(url))
         logger.info("JSON payload:\t{0}".format(jsonPayLoad))
-        req = requests.Request ('POST', url, data=jsonPayLoad, headers={'Content-Type': 'application/json'})
-        req = req.prepare()
-        logger.info('Full request:\n{}\n{}\n{}\n{}'.format(
-            '-----------START-----------',
-            req.method + ' ' + req.url,
-            '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
-            req.body,
-            ))
-        #res = self.Session.session.post(url, jsonPayLoad, headers={'Content-Type': 'application/json'}, stream=True)
-        res = self.Session.session.send(req, stream=True)
+        res = self.Session.session.post(url, jsonPayLoad, headers={'Content-Type': 'application/json'}, stream=True)
         data = self.Session.getDataResponse(res, url, dataType="text")
         return data
 
