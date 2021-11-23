@@ -71,3 +71,25 @@ optional arguments:
 
 
 ```
+
+## renameFastaDefline.py
+Renames record ids in a fasta file using a mapping of old to new ids. The mapping should be a two-column, comma-separated file with the existing ids in the first column and the new ids in the second column.
+
+*Script is written in Python3 and requires BioPython*
+
+```
+usage: renameFastaDefline.py [-h] --fastaFile FASTAFILE --mappingFile
+                             MAPPINGFILE
+
+Rename fasta file deflines from a mapping file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --fastaFile FASTAFILE
+                        Input fasta file
+  --mappingFile MAPPINGFILE
+                        Comma separated file containing record ids from the
+                        fasta file and their replacements
+
+
+```
