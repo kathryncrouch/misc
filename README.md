@@ -7,17 +7,22 @@ Retrieves genome-level fasta files from Downloads for every organism in a VEuPat
 *Script is written in Python3 and requires the requests library.  See requests documentation for installation instructions [here](https://2.python-requests.org "Requests Documentation") (or use pip)*
 
 ```
-usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein} [--includeUnannotated] [--downloadGFF] project
+usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein} 
+[--includeUnannotated] [--downloadGFF] project
 
 positional arguments:
-  project               VEuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g,
-                        CryptoDB,ToxoDB
+  project               VEuPathDB project from which you wish to download 
+  fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, 
+  use a comma separated list, e.g, CryptoDB,ToxoDB
 
 optional arguments:
   -h, --help            show this help message and exit
   --type {genomic,transcript,cds,protein}
-                        Type of sequence to download. Choose from genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid)
-  --includeUnannotated  For genomic sequences only, include fasta from organisms with no annotations
+                        Type of sequence to download. Choose from genomic 
+                        sequence, transcript sequences, CDS sequences 
+                        (all nucleotide) or protein sequences (amino acid)
+  --includeUnannotated  For genomic sequences only, include fasta from 
+  organisms with no annotations
   --downloadGFF         For annotated genomes only, also download a GFF file
 
 ```
