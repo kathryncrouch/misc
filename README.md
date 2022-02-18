@@ -12,8 +12,9 @@ usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein}
 
 positional arguments:
   project               VEuPathDB project from which you wish to download 
-  fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, 
-  use a comma separated list, e.g, CryptoDB,ToxoDB
+                        fasta sequences, e.g., PlasmoDB. For downloads 
+                        from multiple projects, use a comma separated list, 
+                        e.g, CryptoDB,ToxoDB
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -22,7 +23,7 @@ optional arguments:
                         sequence, transcript sequences, CDS sequences 
                         (all nucleotide) or protein sequences (amino acid)
   --includeUnannotated  For genomic sequences only, include fasta from 
-  organisms with no annotations
+                        organisms with no annotations
   --downloadGFF         For annotated genomes only, also download a GFF file
 
 ```
