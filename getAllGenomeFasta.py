@@ -21,10 +21,12 @@ class GenomeFastaURLs(object):
         self.args = args
         self.project = project
         self.baseurl = self.getBaseURL()
-        self.fields = ["URLGenomeFasta"] if self.args.type == 'genomic' else ["URLproteinFasta"]
+        self.fields = ['URLGenomeFasta'] if self.args.type == 'genomic' else ['URLproteinFasta']
+        if self.args.downloadGFF:
+            self.fields.append('URLgff')
         self.question = "GenomeDataTypes" if self.args.includeUnannotated else "GeneMetrics"
         
-        url = ('{0}/a/service/record-types/organism/searches/{1}/reports/standard?reportConfig={{\"attributes\":[\"{2}\"]}}'.format(self.baseurl, self.question, ','.join(self.fields)))
+        url = ('{0}/a/service/record-types/organism/searches/{1}/reports/standard?reportConfig={{\"attributes\":[\"{2}\"]}}'.format(self.baseurl, self.question, '\",\"'.join(self.fields)))
         s = self.get_session()
         res = s.get(url, verify=True)
         self.orgs = collections.deque()
@@ -64,7 +66,10 @@ class GenomeFastaURLs(object):
                 url = url.replace('Proteins', 'Transcripts')
             o = urlparse(url)
             path = o.path.split('/')[-1]
-            logging.info("Retrieving {0} fasta file {1} from {2}".format(args.type, path, url))
+            if 'gff' in path:
+                logging.info('Retrieving GFF file {0} from {1}'.format(path, url))
+            else:
+                logging.info("Retrieving {0} fasta file {1} from {2}".format(args.type, path, url))
             try:
                 urllib.request.urlretrieve(url, path)
             except urllib.error.URLError as e:
@@ -77,9 +82,11 @@ class ArgParser(ArgumentParser):
 
     def __init__ (self):
         super().__init__()
-        self.add_argument('project', help='EuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g, CryptoDB,ToxoDB')
+        self.add_argument('project', help='VEuPathDB project from which you wish to download fasta sequences, e.g., PlasmoDB. For downloads from multiple projects, use a comma separated list, e.g, CryptoDB,ToxoDB')
         self.add_argument('--type', choices=['genomic', 'transcript', 'cds', 'protein'], required=True, help='Type of sequence to download. Choose from genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid)')
         self.add_argument('--includeUnannotated', action='store_true', help='For genomic sequences only, include fasta from organisms with no annotations')
+        self.add_argument('--downloadGFF', action='store_true', help='For annotated genomes only, also download a GFF file')
+
 
     def _parse_args (self):
         self.args = super().parse_args()
@@ -87,12 +94,29 @@ class ArgParser(ArgumentParser):
             raise IncompatibleArgsError()
         return self.args
 
+
+    def _check_gff(self):
+        if not self.args:
+            print('Checking')
+            self.args = super().parse_args()
+
+        if self.args.includeUnannotated and self.args.downloadGFF:
+            raise IncompatibleArgsError()
+
+
     def parse_args(self):
         try:
             self.args = self._parse_args()
         except IncompatibleArgsError as e:
-            logging.error("Sorry, CDS, transcript and protein fasta files are only available for annotated genomes.  Please remove the --includeUnannotated flag or choose --type genomic and try again.\n\n{0}".format(e))
+            logging.error('Sorry, CDS, transcript and protein fasta files are only available for annotated genomes.  Please remove the --includeUnannotated flag or choose --type genomic and try again.\n\n{0}'.format(e))
             raise SystemExit()
+
+        try:
+            self._check_gff()
+        except IncompatibleArgsError as e:
+            logging.error('GFF files cannot be retrieved for unannotated genomes. Please remove the --includeUnannotated flag, or do not use --downloadGFF\n\n{0}'.format(e))
+            raise SystemExit()
+
         return self.args
 
 
@@ -103,6 +127,7 @@ class IncompatibleArgsError(Exception):
 
     def __str__(self):
         return self.data
+
 
 if __name__ == '__main__':
     args = ArgParser().parse_args()
