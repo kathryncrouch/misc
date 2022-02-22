@@ -3,6 +3,7 @@ Miscellaneous scripts not associated with any particular project
 
 ## getAllGenomeFasta.py
 Retrieves genome-level fasta files from Downloads for every organism in a VEuPathDB project (e.g., PlasmoDB). Choose between genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid). Use the --downloadGFF option to download GFF annotation files in addition to fasta files. For genomic sequence when GFF files are not required, you can choose to include organisms without annotations.
+
 The --referenceOnly option is used to restrict the downloads to VEuPathDB reference organisms. Note that designation of a genome as a reference in VEuPathDB means that it is used for display of functional data in VEuPathDB databases. Genomes that are not VEuPathDB references may still be of good quality and appropriate for use as a reference for personal data analysis.
 
 *Script is written in Python3 and requires the requests library.  See requests documentation for installation instructions [here](https://2.python-requests.org "Requests Documentation") (or use pip)*
