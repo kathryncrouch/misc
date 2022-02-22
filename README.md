@@ -2,29 +2,33 @@
 Miscellaneous scripts not associated with any particular project
 
 ## getAllGenomeFasta.py
-Retrieves genome-level fasta files from Downloads for every organism in a VEuPathDB project (e.g., PlasmoDB). Choose between genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid).  Option to download GFF annotation files in addition to fasta files. For genomic sequence, you can choose to include organisms without annotations.
+Retrieves genome-level fasta files from Downloads for every organism in a VEuPathDB project (e.g., PlasmoDB). Choose between genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid). Use the --downloadGFF option to download GFF annotation files in addition to fasta files. For genomic sequence when GFF files are not required, you can choose to include organisms without annotations.
+The --referenceOnly option is used to restrict the downloads to VEuPathDB reference organisms. Note that designation of a genome as a reference in VEuPathDB means that it is used for display of functional data in VEuPathDB databases. Genomes that are not VEuPathDB references may still be of good quality and appropriate for use as a reference for personal data analysis.
 
 *Script is written in Python3 and requires the requests library.  See requests documentation for installation instructions [here](https://2.python-requests.org "Requests Documentation") (or use pip)*
 
 ```
-usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein} 
-[--includeUnannotated] [--downloadGFF] project
+usage: getAllGenomeFasta.py [-h] --type {genomic,transcript,cds,protein}
+                            [--includeUnannotated] [--downloadGFF]
+                            [--referenceOnly]
+                            project
 
 positional arguments:
-  project               VEuPathDB project from which you wish to download 
-                        fasta sequences, e.g., PlasmoDB. For downloads 
-                        from multiple projects, use a comma separated list, 
-                        e.g, CryptoDB,ToxoDB
+  project               VEuPathDB project from which you wish to download
+                        fasta sequences, e.g., PlasmoDB. For downloads from
+                        multiple projects, use a comma separated list, e.g,
+                        CryptoDB,ToxoDB
 
 optional arguments:
   -h, --help            show this help message and exit
   --type {genomic,transcript,cds,protein}
-                        Type of sequence to download. Choose from genomic 
-                        sequence, transcript sequences, CDS sequences 
-                        (all nucleotide) or protein sequences (amino acid)
-  --includeUnannotated  For genomic sequences only, include fasta from 
+                        Type of sequence to download. Choose from genomic
+                        sequence, transcript sequences, CDS sequences (all
+                        nucleotide) or protein sequences (amino acid)
+  --includeUnannotated  For genomic sequences only, include fasta from
                         organisms with no annotations
   --downloadGFF         For annotated genomes only, also download a GFF file
+  --referenceOnly       Restrict downloads to VEuPathDB reference genomes
 
 ```
 

@@ -26,7 +26,7 @@ class GenomeFastaURLs(object):
             self.fields.append('URLgff')
         self.question = "GenomeDataTypes" if self.args.includeUnannotated else "GeneMetrics"
         
-        url = ('{0}/a/service/record-types/organism/searches/{1}/reports/standard?reportConfig={{\"attributes\":[\"{2}\"]}}'.format(self.baseurl, self.question, '\",\"'.join(self.fields)))
+        url = ('{0}/a/service/record-types/organism/searches/{1}/reports/standard?reportConfig={{\"attributes\":[\"is_reference_strain\",\"{2}\"]}}'.format(self.baseurl, self.question, '\",\"'.join(self.fields)))
         s = self.get_session()
         res = s.get(url, verify=True)
         self.orgs = collections.deque()
@@ -40,9 +40,13 @@ class GenomeFastaURLs(object):
                 raise SystemExit()
         
         for record in j['records']:
+            reference = True if record['attributes']['is_reference_strain'] == 'yes' else False
             for attribute in record['attributes']:
                 if attribute in self.fields:
-                    self.orgs.append(record['attributes'][attribute])
+                    if (self.args.referenceOnly and reference) or not self.args.referenceOnly:
+                        self.orgs.append(record['attributes'][attribute])
+                    else:
+                        logger.info('Not retrieving files for {0} because it is not a reference genome. To retrieve files for this organism, do not use the --referenceOnly flag\n'.format(record['displayName']))
 
 
     def get_session(self):
@@ -86,6 +90,7 @@ class ArgParser(ArgumentParser):
         self.add_argument('--type', choices=['genomic', 'transcript', 'cds', 'protein'], required=True, help='Type of sequence to download. Choose from genomic sequence, transcript sequences, CDS sequences (all nucleotide) or protein sequences (amino acid)')
         self.add_argument('--includeUnannotated', action='store_true', help='For genomic sequences only, include fasta from organisms with no annotations')
         self.add_argument('--downloadGFF', action='store_true', help='For annotated genomes only, also download a GFF file')
+        self.add_argument('--referenceOnly', action='store_true', help='Restrict downloads to VEuPathDB reference genomes')
 
 
     def _parse_args (self):
